@@ -47,12 +47,34 @@ def pad(x,y):
 
 def subquadratic_multiply(x, y):
     ### TODO
+    n = max(len(x), len(y))
+    if n <= 4:
+      return x * y
+    else:
+        xL, xR = split_number(x)
+        yL, yR = split_number(y)
+        p1 = subquadratic_multiply(xL, yL)
+        p2 = subquadratic_multiply(xR, yR)
+        p3 = subquadratic_multiply(xL + xR, yL + yR)
+        return (p1 << (2 * (n // 2))) + ((p3 - p1 - p2) << (n // 2)) + p2
     pass
-    ###
 
 ## Feel free to add your own tests here.
 def test_multiply():
-    assert subquadratic_multiply(BinaryNumber(2), BinaryNumber(2)) == 2*2
+    x = BinaryNumber(2)
+    y = BinaryNumber(2)
+    res = subquadratic_multiply(x, y)
+    assert res.decimal_val == x.decimal_val * y.decimal_val
+
+    x = BinaryNumber(4)
+    y = BinaryNumber(6)
+    res = subquadratic_multiply(x, y)
+    assert res.decimal_val == x.decimal_val * y.decimal_val
+
+    x = BinaryNumber(90)
+    y = BinaryNumber(2)
+    res = subquadratic_multiply(x, y)
+    assert res.decimal_val == x.decimal_val * y.decimal_val
 
 def time_multiply(x, y, f):
     start = time.time()
@@ -62,3 +84,4 @@ def time_multiply(x, y, f):
     
     
 
+test_multiply()
